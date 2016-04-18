@@ -30,7 +30,7 @@ Dear <strong>${user}</strong>, Welcome to User Page.
 </br>
 <a href="article/newarticle"/>NewArticle</a>
 <h2>List of User Articles</h2>
-<table class="table">
+<table class="table data-contacts-js table ">
   <tr>
     <td>id</td><td>Title</td><td>Text</td><td></td><td></td>
   </tr>
@@ -66,26 +66,25 @@ Dear <strong>${user}</strong>, Welcome to User Page.
       <div class="modal-body">
         <form>
           <div class="form-group">
-            <label for="recipient-name" class="control-label">Recipient:</label>
-            <input type="text" class="form-control" id="recipient-name">
+            <label for="title" class="control-label">Recipient:</label>
+            <input type="text" class="form-control" id="title">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
           </div>
           <div class="form-group">
-            <label for="message-text" class="control-label">Message:</label>
-            <textarea class="form-control" id="message-text"></textarea>
+            <label for="text" class="control-label">Message:</label>
+            <textarea class="form-control" id="text"></textarea>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button"  onclick="SaveArticle()" class="btn btn-primary">Send message</button>
+        <button type="button"  onclick="SaveArticle()" class="btn btn-primary">Save article</button>
       </div>
     </div>
   </div>
 </div>
 
-<button type="button"  onclick="SaveArticle()" class="btn btn-primary">Send message</button>
 
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -99,23 +98,32 @@ Dear <strong>${user}</strong>, Welcome to User Page.
 </html>
 
 <script>
-  $('#exampleModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget) // Button that triggered the modal
-    var recipient = button.data('whatever') // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-    var modal = $(this)
-    modal.find('.modal-title').text('New message to ' + recipient)
-    modal.find('.modal-body input').val(recipient)
-  })
 
   var SaveArticle = function() {
+    $('#exampleModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget) // Button that triggered the modal
+      var recipient = button.data('whatever') // Extract info from data-* attributes
+      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+      var modal = $(this)
+      modal.find('.modal-title').text('New message to ' + recipient)
+      modal.find('.modal-body input').val(recipient)
+    })
+
+
     $.ajax({
       type: 'POST',
       url: "http://localhost:8080/homeProject/article/new",
       dataType: 'json',
-      data:{ "${_csrf.parameterName}" : "${_csrf.token}", "title": $("#recipient-name").text(), "text" : $("#message-text").text() },
-      success:function(article){alert(article)}
+      data:{ "${_csrf.parameterName}" : "${_csrf.token}", title: $('#title').val(), text : $('#text').val() },
+      success:function (art) {
+        $(".data-contacts-js").append(
+                "<tr><td>" +art.articleId + "</td>" +
+                "<td>" + art.title + "</td>" +
+                "<td>" + art.text + "</td>" +
+                "<td>" + "Rdit" + "</td>" +
+                "<td>" + "<button type='button' id='asd' onclick=' DeleteArt(" + parseInt(art.articleId) + ");'>DELETE</button> " + "</td></tr>");
+      }
     })
   }
 </script>

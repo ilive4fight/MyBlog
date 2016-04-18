@@ -13,7 +13,7 @@
 	message : ${success}
 	<br/>
 	<br/>
-	Go back to <a href="<c:url value='/admin/admin' />">AdminPage</a>
+	Go back to <a href="<c:url value='/admin' />">AdminPage</a>
 	<a href="<c:url value='/logout' />">Logout</a>
 	
 </body>
